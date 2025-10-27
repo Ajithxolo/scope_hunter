@@ -37,19 +37,22 @@ module RuboCop
         def index_scopes(ast)
           return unless ast
           # Find `scope :name, -> { ... }`
-          ast.each_node(:block) do |blk|
-            send = blk.send_node
-            next unless send&.method_name == :scope
+          ast.each_node(:send) do |send|
+            next unless send.method_name == :scope
             name_node = send.arguments[0]
             next unless name_node&.sym_type?
 
             model = enclosing_class_name(send)
             next unless model
 
-            chain = ::ScopeHunter::ASTUtils.relation_chain(blk.body)
+            # The body is the lambda argument (second argument)
+            lambda_body = send.arguments[1]
+            next unless lambda_body&.block_type?
+
+            chain = ::ScopeHunter::ASTUtils.relation_chain(lambda_body.body, require_model: false)
             next unless chain
 
-            sig = ::ScopeHunter::Canonicalizer.signature(chain)
+            sig = ::ScopeHunter::Canonicalizer.signature(chain, model: model)
             @index.add(model:, name: name_node.value, signature: sig)
           end
         end

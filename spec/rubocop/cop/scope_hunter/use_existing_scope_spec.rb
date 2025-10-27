@@ -13,7 +13,7 @@ RSpec.describe RuboCop::Cop::ScopeHunter::UseExistingScope, :config do
         scope :active, -> { where(status: :active) }
         def self.x
           User.where(status: :active)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^ Query matches `User.active`. Use the scope instead.
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ScopeHunter/UseExistingScope: Query matches `User.active`. Use the scope instead.
         end
       end
     RUBY

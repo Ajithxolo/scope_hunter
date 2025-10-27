@@ -10,14 +10,14 @@ Gem::Specification.new do |spec|
 
   spec.summary = "RuboCop extension that suggests replacing ActiveRecord query chains with existing named scopes (with autocorrect)."
   spec.description = "Scope Hunter is a RuboCop extension that detects ActiveRecord query chains that duplicate existing named scopes and suggests using those scopes instead. It indexes model scopes, canonicalizes relation chains, and flags matches with an autocorrect that replaces the initial query with Model.scope while preserving any trailing methods. This keeps query logic DRY, improves readability, and helps teams discover and reuse well-named scopes."
-  spec.homepage = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage = "https://github.com/ajithbuddy/scope_hunter"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-    spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["source_code_uri"] = "https://github.com/ajithbuddy/scope_hunter"
+  spec.metadata["changelog_uri"] = "https://github.com/ajithbuddy/scope_hunter/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

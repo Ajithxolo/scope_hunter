@@ -6,8 +6,8 @@ module ScopeHunter
   
       # chain: array of {recv:, msg:, args:}
       # output: stable signature string
-      def signature(chain)
-        state = { model: nil, where: {}, joins: [], order: [] }
+      def signature(chain, model: nil)
+        state = { model: model, where: {}, joins: [], order: [] }
   
         chain.each do |step|
           state[:model] ||= step[:recv] if step[:recv].is_a?(String)

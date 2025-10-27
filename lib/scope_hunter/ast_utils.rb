@@ -9,7 +9,7 @@ module ScopeHunter
     AR_METHODS = %i[where rewhere joins order limit offset select distinct group having references includes preload].freeze
 
     # Returns array of steps: [{recv: "User", msg: :where, args: [{status: :active}]}, ...]
-    def relation_chain(node)
+    def relation_chain(node, require_model: true)
       return nil unless node&.send_type?
 
       chain = []
@@ -34,7 +34,8 @@ module ScopeHunter
         end
       end
 
-      return nil unless seen_ar && chain.first[:recv] # must start from Model constant
+      return nil unless seen_ar
+      return nil if require_model && chain.first[:recv].nil? # must start from Model constant
       chain
     end
 
