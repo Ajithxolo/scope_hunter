@@ -1,0 +1,4 @@
+ScopeHunter/UseExistingScope:
+  Enabled: true
+  Autocorrect: conservative
+  SuggestPartialMatches: true
