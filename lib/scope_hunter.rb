@@ -5,6 +5,7 @@ require "scope_hunter/version" if File.exist?(File.join(__dir__, "scope_hunter/v
 require "scope_hunter/ast_utils"
 require "scope_hunter/canonicalizer"
 require "scope_hunter/scope_index"
+require "scope_hunter/plugin"
 
 # When rubocop loads, inject our default config
 begin
