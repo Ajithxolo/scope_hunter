@@ -1,11 +1,90 @@
+# Bundler
 /.bundle/
+/vendor/bundle
+# Note: Gemfile.lock is typically committed for gems
+
+# Documentation
 /.yardoc
 /_yardoc/
-/coverage/
 /doc/
+/rdoc/
+
+# Coverage reports
+/coverage/
+*.coverage
+.nyc_output
+
+# Build artifacts
 /pkg/
+*.gem
+*.gemspec.bak
+
+# Test artifacts
 /spec/reports/
 /tmp/
-
-# rspec failure tracking
 .rspec_status
+.rspec_examples.txt
+
+# IDE and editor files
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.log
+
+# Ruby version managers
+.ruby-version
+.ruby-gemset
+.rvmrc
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Debug files
+*.pdb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Local test files
+test_*.rb
+/tmp/
+*.test.rb
+
+# RBS type checking
+.rbs_cache/
+
+# Byebug
+byebug_history
+
+# Spring
+/spring/*.pid
+
+# Local configuration
+.rubocop_local.yml
+.rubocop-*.yml
