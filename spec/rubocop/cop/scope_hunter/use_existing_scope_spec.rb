@@ -33,6 +33,27 @@ RSpec.describe RuboCop::Cop::ScopeHunter::UseExistingScope, :config do
     RUBY
   end
 
+  it "flags a rewhere query that matches a scope" do
+    expect_offense(<<~RUBY)
+      class User < ApplicationRecord
+        scope :active, -> { where(status: :active) }
+        def self.x
+          User.rewhere(status: :active)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ScopeHunter/UseExistingScope: Query matches `User.active`. Use the scope instead.
+        end
+      end
+    RUBY
+
+    expect_correction(<<~RUBY)
+      class User < ApplicationRecord
+        scope :active, -> { where(status: :active) }
+        def self.x
+          User.active
+        end
+      end
+    RUBY
+  end
+
   # ── Trailing methods are preserved ─────────────────────────────────────────
 
   it "preserves trailing methods after the replaced scope call" do

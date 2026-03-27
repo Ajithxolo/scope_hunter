@@ -144,7 +144,7 @@ module RuboCop
         def replacement_for(node, match)
           trailing = trailing_after_first_ar(node)
           (["#{match.model}.#{match.name}"] + trailing).join
-        rescue
+        rescue StandardError
           nil
         end
 

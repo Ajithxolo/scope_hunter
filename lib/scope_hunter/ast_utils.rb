@@ -63,7 +63,7 @@ module ScopeHunter
 
     def const_name(node)
       node.const_name
-    rescue
+    rescue NoMethodError
       nil
     end
 

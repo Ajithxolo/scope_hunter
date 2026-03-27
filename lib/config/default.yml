@@ -1,7 +1,6 @@
 ScopeHunter/UseExistingScope:
   Enabled: true
   Autocorrect: conservative
-  SuggestPartialMatches: true
   ModelPaths:
     - "app/models/**/*.rb"
   IgnoreModels: []
