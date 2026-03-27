@@ -1,5 +1,18 @@
 ## [Unreleased]
 
+## [0.1.4] - 2026-03-27
+
+### Fixed
+- Gemspec shipped with empty `config/` glob — default config was never included in the
+  installed gem; corrected to `lib/config/*.yml`
+- Bare `rescue` replaced with `rescue NoMethodError` / `rescue StandardError` so unexpected
+  exceptions are no longer silently swallowed
+- Removed `SuggestPartialMatches` config key from `default.yml` — it was never implemented
+
+### Changed
+- Indentation normalised to 2-space throughout `canonicalizer.rb` and `scope_index.rb`
+- Added cop-level test for `rewhere` query matching an existing scope
+
 ## [0.1.3] - 2026-03-27
 
 ### Added

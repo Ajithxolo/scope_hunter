@@ -104,7 +104,7 @@ User.active.order(:name).limit(10)
 
 | Scope pattern | Example |
 |---|---|
-| `where` conditions | `scope :active, -> { where(status: :active) }` |
+| `where` / `rewhere` conditions | `scope :active, -> { where(status: :active) }` |
 | `where.not` conditions | `scope :inactive, -> { where.not(status: :active) }` |
 | `joins` | `scope :with_posts, -> { joins(:posts) }` |
 | `order` | `scope :recent, -> { order(created_at: :desc) }` |
@@ -112,6 +112,7 @@ User.active.order(:name).limit(10)
 
 ### Smart matching
 
+- **`rewhere` is treated as `where`** — `rewhere(status: :active)` matches the same scope as `where(status: :active)`
 - **Hash key order doesn't matter** — `where(a: 1, b: 2)` matches `where(b: 2, a: 1)`
 - **Parameterized scopes are matched by shape** — `scope :by_role, ->(r) { where(role: r) }` matches any `where(role: <value>)`
 - **Trailing methods are preserved** — `.order()`, `.limit()`, and anything after the matched query are kept intact
