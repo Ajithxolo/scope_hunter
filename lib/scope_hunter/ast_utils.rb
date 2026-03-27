@@ -9,6 +9,7 @@ module ScopeHunter
     AR_METHODS = %i[where rewhere joins order limit offset select distinct group having references includes preload].freeze
 
     # Returns array of steps: [{recv: "User", msg: :where, args: [{status: :active}]}, ...]
+    # Handles the compound `where.not(...)` pattern as a single :where_not step.
     def relation_chain(node, require_model: true)
       return nil unless node&.send_type?
 
@@ -21,7 +22,17 @@ module ScopeHunter
         recv = cur.receiver
         args = cur.arguments
 
-        if AR_METHODS.include?(msg) || model_const?(recv)
+        if where_not_node?(cur)
+          # `recv` is the bare `.where` call; its receiver is the model (or nil in scope body)
+          model_recv = recv.receiver
+          chain.unshift({
+            recv: model_recv&.const_type? ? const_name(model_recv) : nil,
+            msg:  :where_not,
+            args: unwrap_args(args)
+          })
+          seen_ar = true
+          cur = model_recv
+        elsif AR_METHODS.include?(msg) || model_const?(recv)
           chain.unshift({
             recv: recv&.const_type? ? const_name(recv) : nil,
             msg:  msg,
@@ -37,6 +48,13 @@ module ScopeHunter
       return nil unless seen_ar
       return nil if require_model && chain.first[:recv].nil? # must start from Model constant
       chain
+    end
+
+    def where_not_node?(node)
+      node.method_name == :not &&
+        node.receiver&.send_type? &&
+        node.receiver.method_name == :where &&
+        node.receiver.arguments.empty?
     end
 
     def model_const?(node)
@@ -67,7 +85,8 @@ module ScopeHunter
       when node.true_type? then true
       when node.false_type? then false
       when node.const_type? then node.const_name.to_sym
-      else :__dynamic__
+      else :__dynamic__ # lvar, ivar, send, etc. — normalized to ? by Canonicalizer,
+                        # enabling parameterized scope matching
       end
     end
   end

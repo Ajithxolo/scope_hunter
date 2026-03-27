@@ -7,15 +7,16 @@ module ScopeHunter
       # chain: array of {recv:, msg:, args:}
       # output: stable signature string
       def signature(chain, model: nil)
-        state = { model: model, where: {}, joins: [], order: [] }
-  
+        state = { model: model, where: {}, where_not: {}, joins: [], order: [] }
+
         chain.each do |step|
           state[:model] ||= step[:recv] if step[:recv].is_a?(String)
-  
+
           case step[:msg]
           when :where, :rewhere
-            h = normalize_hash(step[:args].first)
-            state[:where].merge!(h)
+            state[:where].merge!(normalize_hash(step[:args].first))
+          when :where_not
+            state[:where_not].merge!(normalize_hash(step[:args].first))
           when :joins
             state[:joins] |= normalize_list(step[:args])
             state[:joins].sort!
@@ -23,17 +24,20 @@ module ScopeHunter
             state[:order] += normalize_order(step[:args])
           end
         end
-  
-        w = state[:where].sort_by(&:first).map { |k,_| "#{k}:?" }.join(",")
-        j = state[:joins].join(",")
-        o = state[:order].map { |(c,d)| "(#{c},#{d || 'asc'})" }.join(",")
-  
-        "M=#{state[:model]}|W={#{w}}|J=[#{j}]|O=[#{o}]"
+
+        w  = state[:where].sort_by(&:first).map { |k, _| "#{k}:?" }.join(",")
+        wn = state[:where_not].sort_by(&:first).map { |k, _| "#{k}:?" }.join(",")
+        j  = state[:joins].join(",")
+        o  = state[:order].map { |(c, d)| "(#{c},#{d || "asc"})" }.join(",")
+
+        sig = "M=#{state[:model]}|W={#{w}}|J=[#{j}]|O=[#{o}]"
+        sig += "|WN={#{wn}}" unless wn.empty?
+        sig
       end
   
       def normalize_hash(obj)
-        h = (obj || {}).to_h
-        h.transform_keys { |k| k.to_s } .transform_values { |_| :"?" }
+        h = obj.is_a?(Hash) ? obj : {}
+        h.transform_keys { |k| k.to_s }.transform_values { |_| :"?" }
       end
   
       def normalize_list(args)
